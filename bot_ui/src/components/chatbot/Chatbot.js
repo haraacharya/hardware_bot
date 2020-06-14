@@ -19,8 +19,8 @@ class Chatbot extends Component {
             }
         };
         this.setState({messages: [...this.state.messages, says]})
-        const res = await axios.post('/df/df_text_query', {text: text})
-
+        const res = await axios.post('/api/df_text_query', {text: text})
+        //res.data.fullfillmentMessages is response from bot_backhend 
         for (let msg of res.data.fullfillmentMessages) {
             says = {
                 speaks: 'bot', 
@@ -30,9 +30,16 @@ class Chatbot extends Component {
         }
 
     }
-
+    //event query will be used when dealing with more than one query
     async df_event_query(event){
-
+        const res = await axios.post('/api/df_event_query', {event: event})
+        for(let msg of res.data.fullfillmentMessages){
+            says = {
+                speaks: 'me',
+                msg: msg
+            }
+            this.setSate({messages: [...this.state.messages, says]})
+        }
     }
 
     render() {
